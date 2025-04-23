@@ -6,58 +6,68 @@ contract ComplaintContract {
         uint256 id;
         uint256 timestamp;
         string description;
+        string location;
         string status;
         address createdBy;
-        bytes32 statusHash;  // Add a field for statusHash
+        bytes32 statusHash;
     }
 
     mapping(uint256 => Complaint) public complaints;
 
     event ComplaintRegistered(
-        uint256 id,
-        uint256 timestamp,
-        string description,
-        string status,
-        address indexed createdBy,
-        bytes32 statusHash  // Add statusHash to the event
-    );
+    uint256 id,
+    uint256 timestamp,
+    string description,
+    string location,
+    string status,
+    address indexed createdBy,
+    bytes32 statusHash
+);
 
     event ComplaintStatusUpdated(
         uint256 id,
-        string newStatus
+        string newStatus,
+        bytes32 newStatusHash
     );
 
-    function registerComplaint(uint256 _id, string memory _description) external returns (bytes32) {
+    function registerComplaint(
+        uint256 _id,
+        string memory _description,
+        string memory _location
+    ) external returns (bytes32) {
         require(complaints[_id].timestamp == 0, "Complaint already exists");
 
-        // Compute the statusHash
-        bytes32 computedStatusHash = keccak256(abi.encodePacked(_id, _description, block.timestamp));
+        bytes32 computedStatusHash = keccak256(abi.encodePacked(_id, _description, _location, "Registered", block.timestamp));
 
         complaints[_id] = Complaint({
             id: _id,
             timestamp: block.timestamp,
             description: _description,
+            location: _location,
             status: "Registered",
             createdBy: msg.sender,
-            statusHash: computedStatusHash  // Store the statusHash in the struct
+            statusHash: computedStatusHash
         });
 
-        emit ComplaintRegistered(_id, block.timestamp, _description, "Registered", msg.sender, computedStatusHash);
-        
-        return computedStatusHash;  // Return statusHash to the caller
+        emit ComplaintRegistered(_id, block.timestamp, _description, _location, "Registered", msg.sender, computedStatusHash);
+        return computedStatusHash;
     }
 
     function updateComplaintStatus(uint256 _id, string memory _newStatus) external {
         require(complaints[_id].timestamp != 0, "Complaint does not exist");
         require(complaints[_id].createdBy == msg.sender, "Only creator can update");
 
+        bytes32 newStatusHash = keccak256(abi.encodePacked(_id, complaints[_id].description, complaints[_id].location, _newStatus, block.timestamp));
         complaints[_id].status = _newStatus;
+        complaints[_id].statusHash = newStatusHash;
 
-        emit ComplaintStatusUpdated(_id, _newStatus);
+        emit ComplaintStatusUpdated(_id, _newStatus, newStatusHash);
     }
 
-    function getComplaint(uint256 _id) external view returns (uint256, uint256, string memory, string memory, address, bytes32) {
+    function getComplaint(uint256 _id) external view returns (
+        uint256, uint256, string memory, string memory, string memory, address, bytes32
+    ) {
         Complaint memory comp = complaints[_id];
-        return (comp.id, comp.timestamp, comp.description, comp.status, comp.createdBy, comp.statusHash);  // Return statusHash as well
+        return (comp.id, comp.timestamp, comp.description, comp.location, comp.status, comp.createdBy, comp.statusHash);
     }
 }
