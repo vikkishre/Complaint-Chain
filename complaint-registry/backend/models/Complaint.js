@@ -7,7 +7,8 @@ const complaintSchema = new mongoose.Schema({
   location: String,
   status: { type: String, default: "Registered" },
   createdBy: String,
-  statusHash: String
+  statusHash: String,
+  username: { type: String, required: true }, // Added username field
 });
 
 module.exports = mongoose.model("Complaint", complaintSchema);

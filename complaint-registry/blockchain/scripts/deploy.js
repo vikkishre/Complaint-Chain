@@ -6,6 +6,12 @@ async function main() {
   await complaintContract.waitForDeployment();
 
   console.log("ComplaintContract deployed to:", await complaintContract.getAddress());
+
+  // 🔍 Tenderly Verification (optional, but helpful)
+  // await hre.tenderly.verify({
+  //   name: "ComplaintContract",
+  //   address: await complaintContract.getAddress(),
+  // });
 }
 
 main().catch((error) => {
