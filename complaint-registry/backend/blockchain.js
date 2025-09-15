@@ -1,24 +1,28 @@
 require("dotenv").config();
 const { ethers } = require("ethers");
 
-const provider = new ethers.JsonRpcProvider("http://localhost:7545");
+// Use Alchemy Sepolia RPC URL from .env
+const provider = new ethers.JsonRpcProvider(process.env.PROVIDER_URL);
 
+// Load wallet from .env private key
 const privateKey = process.env.PRIVATE_KEY;
 const wallet = new ethers.Wallet(privateKey, provider);
 
-const contractAddress = "0xED0EeA3BCdf824b25a9f308B984357F6Be2BeB69"; // Replace if re-deployed
+// Contract address from .env (no hardcoding)
+const contractAddress = process.env.CONTRACT_ADDRESS;
 
+// ABI of ComplaintContract
 const contractABI = [
   "function registerComplaint(uint256 _id, string _description, string _location, string _complaintType, address _createdBy, string _username) external returns (bytes32)",
   "function updateComplaintStatus(uint256 _id, string _newStatus) external",
   "function getComplaint(uint256 _id) external view returns (uint256, uint256, string, string, string, string, string, address, bytes32)",
-  "function getAllComplaintIds() external view returns (uint256[] memory)", // ✅ ADD THIS LINE
+  "function getAllComplaintIds() external view returns (uint256[] memory)",
 
   "event ComplaintRegistered(uint256 id, uint256 timestamp, string description, string location, string complaintType, string status, address createdBy, string username, bytes32 statusHash)",
   "event ComplaintStatusUpdated(uint256 id, string newStatus, bytes32 newStatusHash)"
 ];
 
-
+// Connect to contract
 const complaintContract = new ethers.Contract(contractAddress, contractABI, wallet);
 
 /**
@@ -74,7 +78,8 @@ async function getComplaint(id) {
     statusHash: comp[8]
   };
 }
-// Fetch all complaints made by a specific user (non-admin)
+
+// Fetch all complaints
 async function getAllComplaints() {
   const allComplaintIds = await complaintContract.getAllComplaintIds();
   const complaints = [];
@@ -87,17 +92,16 @@ async function getAllComplaints() {
   return complaints;
 }
 
-// Fetch only user complaints
+// Fetch complaints by username
 async function getUserComplaints(username) {
   const allComplaints = await getAllComplaints();
   return allComplaints.filter(complaint => complaint.username === username);
 }
 
-// Admin: fetch all complaints
+// Admin fetch all complaints
 async function getAdminComplaints() {
   return await getAllComplaints();
 }
-
 
 module.exports = {
   registerComplaint,
@@ -106,5 +110,4 @@ module.exports = {
   getAllComplaints,
   getAdminComplaints,
   getUserComplaints
-
 };

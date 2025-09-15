@@ -9,7 +9,7 @@ function My_Complaints() {
   useEffect(() => {
     const fetchComplaints = async () => {
       try {
-        const res = await fetch(`http://localhost:3000/complaints?username=${username}&isAdmin=false`);
+        const res = await fetch(`http://localhost:5000/complaints?username=${username}&isAdmin=false`);
         const data = await res.json();
         setComplaints(data);
       } catch (error) {

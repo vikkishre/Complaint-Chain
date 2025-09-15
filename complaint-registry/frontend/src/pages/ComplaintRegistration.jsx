@@ -44,7 +44,7 @@ const handleSubmit = async (e) => {
   try {
     setIsSubmitting(true);
 
-    const response = await fetch("http://localhost:3000/complaint", {
+    const response = await fetch("http://localhost:5000/complaint", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

@@ -17,7 +17,7 @@ function Login() {
       if (!token) return;
 
       try {
-        const res = await fetch('http://localhost:3000/api/protected-route', {
+        const res = await fetch('http://localhost:5000/api/protected-route', {
           headers: { Authorization: `Bearer ${token}` }
         });
 
@@ -39,7 +39,7 @@ function Login() {
     setLoading(true); // Set loading state to true while submitting
   
     try {
-      const response = await fetch("http://localhost:3000/login", {
+      const response = await fetch("http://localhost:5000/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),

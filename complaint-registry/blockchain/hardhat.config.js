@@ -1,13 +1,15 @@
 require("@nomicfoundation/hardhat-toolbox");
-require("dotenv").config({ path: "../backend/.env" });  // Adjust the path to where your .env file is located
+require("dotenv").config();
 
 module.exports = {
-  networks: {
-    ganache: {
-      url: "http://127.0.0.1:7545",
-      accounts: [process.env.PRIVATE_KEY],
-      chainId: 1337,  // Add the network ID here
-    }
-  },
   solidity: "0.8.28",
+  networks: {
+    sepolia: {
+      url: process.env.ALCHEMY_RPC_URL,   // Full RPC URL
+      accounts: [process.env.PRIVATE_KEY],
+    },
+  },
+  etherscan: {
+    apiKey: process.env.ETHERSCAN_API_KEY,
+  },
 };

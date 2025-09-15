@@ -20,7 +20,7 @@ function Signup() {
 
   const fetchCaptcha = async () => {
     try {
-      const res = await fetch('http://localhost:3000/captcha', {
+      const res = await fetch('http://localhost:5000/captcha', {
         credentials: 'include',
       })
       const data = await res.text()
@@ -34,7 +34,7 @@ function Signup() {
 
   const handleVerifyCaptcha = async () => {
     try {
-      const res = await fetch('http://localhost:3000/verify-captcha', {
+      const res = await fetch('http://localhost:5000/verify-captcha', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -78,7 +78,7 @@ function Signup() {
     }
   
     try {
-      const res = await fetch('http://localhost:3000/signup', {
+      const res = await fetch('http://localhost:5000/signup', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

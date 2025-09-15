@@ -18,7 +18,7 @@ function App() {
       if (!token) return;
 
       try {
-        const res = await fetch('http://localhost:3000/api/protected-route', {
+        const res = await fetch('http://localhost:5000/api/protected-route', {
           headers: { Authorization: `Bearer ${token}` }
         });
 

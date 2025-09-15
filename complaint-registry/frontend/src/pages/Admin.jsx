@@ -29,7 +29,7 @@ const AdminPanel = () => {
   const fetchAllComplaints = async () => {
     try {
       setLoading(true)
-      const response = await fetch("http://localhost:3000/complaints?isAdmin=true", {
+      const response = await fetch("http://localhost:5000/complaints?isAdmin=true", {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("authToken")}`,
         },
@@ -62,7 +62,7 @@ const AdminPanel = () => {
     try {
       const newStatus = statusOptions.find((s) => s.value === newStatusValue)?.label
   
-      const response = await fetch(`http://localhost:3000/complaint/${id}`, {
+      const response = await fetch(`http://localhost:5000/complaint/${id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
